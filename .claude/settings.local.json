@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(py *)",
+      "PowerShell(winget *)",
+      "PowerShell(npm *)",
+      "PowerShell(node --version)",
+      "PowerShell(Start-Process \"http://localhost:3000\")",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:3000/api/recipes\" -UseBasicParsing)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:3000/style.css\" -UseBasicParsing | Select-Object -ExpandProperty StatusCode)",
+      "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3000/api/recipes\" | Select-Object title, tags | ConvertTo-Json)",
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:3000/index.html\" -UseBasicParsing | Select-Object -ExpandProperty StatusCode)"
+    ]
+  }
+}

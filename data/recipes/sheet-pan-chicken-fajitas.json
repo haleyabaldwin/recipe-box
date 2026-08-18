@@ -1,0 +1,66 @@
+{
+  "id": "sheet-pan-chicken-fajitas",
+  "title": "Sheet Pan Chicken Fajitas",
+  "servings": 4,
+  "tags": [
+    "sheet-pan"
+  ],
+  "ingredients": [
+    {
+      "name": "Chicken breast",
+      "quantity": 1.5,
+      "unit": "lb",
+      "category": "Meat"
+    },
+    {
+      "name": "Bell pepper",
+      "quantity": 3,
+      "unit": "",
+      "category": "Produce"
+    },
+    {
+      "name": "Onion",
+      "quantity": 1,
+      "unit": "",
+      "category": "Produce"
+    },
+    {
+      "name": "Olive oil",
+      "quantity": 2,
+      "unit": "tbsp",
+      "category": "Baking & Cooking"
+    },
+    {
+      "name": "Cumin",
+      "quantity": 1,
+      "unit": "tsp",
+      "category": "Baking & Cooking"
+    },
+    {
+      "name": "Chili powder",
+      "quantity": 1,
+      "unit": "tbsp",
+      "category": "Baking & Cooking"
+    },
+    {
+      "name": "Tortilla",
+      "quantity": 8,
+      "unit": "",
+      "category": "Bread"
+    },
+    {
+      "name": "Lime",
+      "quantity": 2,
+      "unit": "",
+      "category": "Produce"
+    },
+    {
+      "name": "Salt",
+      "quantity": null,
+      "unit": "to taste",
+      "category": "Baking & Cooking"
+    }
+  ],
+  "instructions": "1. Slice chicken and vegetables into strips.\n2. Toss with oil and spices on a sheet pan.\n3. Roast at 425F for 20-25 minutes.\n4. Squeeze lime over top and serve with warm tortillas.",
+  "notes": ""
+}

@@ -1,0 +1,84 @@
+{
+  "id": "tiramisu-overnight-oats",
+  "title": "Tiramisu Overnight Oats",
+  "servings": 2,
+  "tags": [
+    "breakfast"
+  ],
+  "ingredients": [
+    {
+      "name": "rolled Old Fashioned oats",
+      "quantity": 1,
+      "unit": "cup",
+      "category": "Pantry & Dry Goods"
+    },
+    {
+      "name": "milk",
+      "quantity": 0.75,
+      "unit": "cup",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "cocoa powder",
+      "quantity": 2,
+      "unit": "tablespoons",
+      "category": "Baking & Cooking"
+    },
+    {
+      "name": "maple syrup",
+      "quantity": 3,
+      "unit": "tablespoons",
+      "category": "Condiments"
+    },
+    {
+      "name": "vanilla extract",
+      "quantity": 1,
+      "unit": "teaspoon",
+      "category": "Baking & Cooking"
+    },
+    {
+      "name": "chia seeds",
+      "quantity": 0.5,
+      "unit": "tablespoon",
+      "category": "Pantry & Dry Goods"
+    },
+    {
+      "name": "espresso or cold brew",
+      "quantity": 0.25,
+      "unit": "cup",
+      "category": "Beverages"
+    },
+    {
+      "name": "salt, optional",
+      "quantity": 1,
+      "unit": "pinch",
+      "category": "Baking & Cooking"
+    },
+    {
+      "name": "Greek yogurt",
+      "quantity": 1,
+      "unit": "cup",
+      "category": "Dairy & Eggs"
+    },
+    {
+      "name": "maple syrup",
+      "quantity": 1.5,
+      "unit": "tablespoons",
+      "category": "Condiments"
+    },
+    {
+      "name": "vanilla extract",
+      "quantity": 0.5,
+      "unit": "teaspoon",
+      "category": "Baking & Cooking"
+    },
+    {
+      "name": "cinnamon",
+      "quantity": 1,
+      "unit": "pinch",
+      "category": "Baking & Cooking"
+    }
+  ],
+  "instructions": "1. In a glass dish with a cover, place the oats, milk, cocoa powder, maple syrup, vanilla extract, chia seeds, espresso, and salt and stir to combine. (If you’d like, you can divide the mixture into two half pint jars with covers here.)\n2. Cover and refrigerate for at least 2 hours, or overnight. Before serving, stir the jars. Mix the Greek yogurt topping and add to the top, then dust with cocoa powder. The oats are best immediately, but you can store 2 to 3 days (the texture becomes more sticky). This oatmeal is meant to be enjoyed cold straight from the refrigerator.",
+  "notes": "Imported from https://www.acouplecooks.com/tiramisu-overnight-oats/"
+}

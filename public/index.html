@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recipe Box</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>The Recipe Box</h1>
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="recipes">Recipes</button>
+      <button class="tab-btn" data-tab="groceries">Grocery List</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="tab-recipes" class="tab-panel active">
+      <div class="panel-header">
+        <input id="search" type="search" placeholder="Search recipes..." />
+        <div class="header-actions">
+          <div class="new-recipe-dropdown">
+            <button id="new-recipe-btn" class="primary">+ New Recipe</button>
+            <div id="new-recipe-menu" class="dropdown-menu hidden">
+              <button type="button" id="new-recipe-manual" class="dropdown-item">Manual Entry</button>
+              <button type="button" id="new-recipe-import" class="dropdown-item">Import from URL</button>
+            </div>
+          </div>
+          <button id="clear-selection-btn" type="button">Clear Selected</button>
+        </div>
+      </div>
+      <div id="tag-filters" class="tag-filters"></div>
+      <div id="recipe-list" class="recipe-list"></div>
+    </section>
+
+    <section id="tab-groceries" class="tab-panel">
+      <div class="grocery-panel">
+        <div class="panel-header">
+          <h2>Grocery List</h2>
+          <button id="keep-export-btn" type="button">Copy for Keep</button>
+        </div>
+        <p class="drag-hint">Drag an item to reorder it, or drop it into a different section to move it there for good.</p>
+        <div id="keep-status" class="import-status"></div>
+        <div id="category-status" class="import-status"></div>
+        <label class="hide-empty-toggle">
+          <input type="checkbox" id="hide-empty-categories" />
+          Hide empty categories
+        </label>
+        <label class="hide-empty-toggle">
+          <input type="checkbox" id="hide-recipe-names" />
+          Hide recipe names
+        </label>
+        <div id="grocery-list">
+          <div class="empty-state">No grocery list yet. Check off recipes on the Recipes tab to build one.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="recipe-modal" class="modal hidden">
+    <div class="modal-content">
+      <button id="modal-close" class="modal-close">&times;</button>
+      <h2 id="modal-title">New Recipe</h2>
+      <form id="recipe-form">
+        <input type="hidden" id="recipe-id" />
+        <label>Title
+          <input id="f-title" type="text" required />
+        </label>
+        <label>Servings
+          <input id="f-servings" type="number" min="1" value="4" required />
+        </label>
+        <label>Tags (comma separated)
+          <input id="f-tags" type="text" placeholder="dinner, quick, vegetarian" />
+        </label>
+
+        <h3>Ingredients</h3>
+        <div id="ingredient-rows"></div>
+        <button type="button" id="add-ingredient-btn">+ Add ingredient</button>
+
+        <label>Instructions
+          <textarea id="f-instructions" rows="6" placeholder="Step by step..."></textarea>
+        </label>
+        <label>Notes
+          <textarea id="f-notes" rows="2"></textarea>
+        </label>
+
+        <div class="modal-actions">
+          <button type="button" id="delete-recipe-btn" class="danger hidden">Delete</button>
+          <button type="submit" class="primary">Save Recipe</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="recipe-view-modal" class="modal hidden">
+    <div class="modal-content">
+      <button id="view-modal-close" class="modal-close">&times;</button>
+      <div id="recipe-view-content"></div>
+    </div>
+  </div>
+
+  <div id="import-modal" class="modal hidden">
+    <div class="modal-content">
+      <button id="import-modal-close" class="modal-close">&times;</button>
+      <h2>Import Recipe from URL</h2>
+      <form id="import-form">
+        <label>Recipe page URL
+          <input id="import-url" type="url" required placeholder="https://example.com/some-recipe" />
+        </label>
+        <div class="modal-actions">
+          <span id="import-status" class="import-status"></span>
+          <button type="submit" class="primary">Fetch Recipe</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

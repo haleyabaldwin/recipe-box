@@ -1,0 +1,30 @@
+{
+  "id": "seasoned-ground-beef-bowl-with-fresh-asparagus-sweet-potato",
+  "title": "Seasoned Ground Beef with Asparagus + Sweet Potato",
+  "servings": 4,
+  "tags": [
+    "easy"
+  ],
+  "ingredients": [
+    {
+      "name": "ground beef",
+      "quantity": 1.5,
+      "unit": "lb",
+      "category": "Meat"
+    },
+    {
+      "name": "asparagus",
+      "quantity": 1,
+      "unit": "bunch",
+      "category": "Produce"
+    },
+    {
+      "name": "sweet potato",
+      "quantity": 2,
+      "unit": "",
+      "category": "Produce"
+    }
+  ],
+  "instructions": "",
+  "notes": ""
+}

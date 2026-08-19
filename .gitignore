@@ -1,2 +1,4 @@
 node_modules/
 *.log
+data/recipes.db
+data/recipes.db-journal

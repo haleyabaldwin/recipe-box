@@ -1,7 +1,8 @@
 import express from "express";
-import fs from "node:fs/promises";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { DatabaseSync } from "node:sqlite";
 import { guessCategory, CATEGORIES, addCategoryKeyword } from "./categorize.js";
 import { importRecipeFromUrl, ImportError } from "./recipeImport.js";
 import { isSaltOrPepper } from "./saltPepper.js";
@@ -9,33 +10,111 @@ import { isSaltOrPepper } from "./saltPepper.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
 const RECIPES_DIR = path.join(ROOT, "data", "recipes");
+const DB_PATH = path.join(ROOT, "data", "recipes.db");
 const PUBLIC_DIR = path.join(ROOT, "public");
 
 const app = express();
 app.use(express.json());
 app.use(express.static(PUBLIC_DIR));
 
+// --- Storage (SQLite) ---
+
+const db = new DatabaseSync(DB_PATH);
+db.exec(`
+  CREATE TABLE IF NOT EXISTS recipes (
+    id           TEXT PRIMARY KEY,
+    title        TEXT NOT NULL,
+    servings     INTEGER NOT NULL,
+    tags         TEXT NOT NULL,
+    ingredients  TEXT NOT NULL,
+    instructions TEXT NOT NULL DEFAULT '',
+    notes        TEXT NOT NULL DEFAULT ''
+  )
+`);
+
+const upsertRecipeStmt = db.prepare(`
+  INSERT INTO recipes (id, title, servings, tags, ingredients, instructions, notes)
+  VALUES (@id, @title, @servings, @tags, @ingredients, @instructions, @notes)
+  ON CONFLICT(id) DO UPDATE SET
+    title = excluded.title,
+    servings = excluded.servings,
+    tags = excluded.tags,
+    ingredients = excluded.ingredients,
+    instructions = excluded.instructions,
+    notes = excluded.notes
+`);
+
+function seedFromJsonFilesIfEmpty() {
+  const { count } = db.prepare("SELECT COUNT(*) AS count FROM recipes").get();
+  if (count > 0) return;
+  if (!fs.existsSync(RECIPES_DIR)) return;
+
+  const files = fs.readdirSync(RECIPES_DIR).filter((f) => f.endsWith(".json"));
+  if (files.length === 0) return;
+
+  db.exec("BEGIN");
+  try {
+    for (const f of files) {
+      const recipe = JSON.parse(fs.readFileSync(path.join(RECIPES_DIR, f), "utf-8"));
+      upsertRecipeStmt.run({
+        id: recipe.id,
+        title: recipe.title,
+        servings: recipe.servings,
+        tags: JSON.stringify(recipe.tags || []),
+        ingredients: JSON.stringify(recipe.ingredients || []),
+        instructions: recipe.instructions || "",
+        notes: recipe.notes || ""
+      });
+    }
+    db.exec("COMMIT");
+    console.log(`Seeded ${files.length} recipe(s) from data/recipes/ into recipes.db`);
+  } catch (err) {
+    db.exec("ROLLBACK");
+    throw err;
+  }
+}
+
+seedFromJsonFilesIfEmpty();
+
+function rowToRecipe(row) {
+  return {
+    id: row.id,
+    title: row.title,
+    servings: row.servings,
+    tags: JSON.parse(row.tags),
+    ingredients: JSON.parse(row.ingredients),
+    instructions: row.instructions,
+    notes: row.notes
+  };
+}
+
+function listRecipeIds() {
+  return db.prepare("SELECT id FROM recipes").all().map((r) => r.id);
+}
+
+function readRecipe(id) {
+  const row = db.prepare("SELECT * FROM recipes WHERE id = ?").get(id);
+  if (!row) throw new Error("Recipe not found");
+  return rowToRecipe(row);
+}
+
+function writeRecipe(recipe) {
+  upsertRecipeStmt.run({
+    id: recipe.id,
+    title: recipe.title,
+    servings: recipe.servings,
+    tags: JSON.stringify(recipe.tags),
+    ingredients: JSON.stringify(recipe.ingredients),
+    instructions: recipe.instructions,
+    notes: recipe.notes
+  });
+}
+
 function slugify(title) {
   return title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "") || "recipe";
-}
-
-async function recipeFiles() {
-  const files = await fs.readdir(RECIPES_DIR);
-  return files.filter((f) => f.endsWith(".json"));
-}
-
-async function readRecipe(id) {
-  const file = path.join(RECIPES_DIR, `${id}.json`);
-  const raw = await fs.readFile(file, "utf-8");
-  return JSON.parse(raw);
-}
-
-async function writeRecipe(recipe) {
-  const file = path.join(RECIPES_DIR, `${recipe.id}.json`);
-  await fs.writeFile(file, JSON.stringify(recipe, null, 2), "utf-8");
 }
 
 function normalizeIngredients(ingredients) {
@@ -52,38 +131,35 @@ function normalizeIngredients(ingredients) {
 
 // --- Recipe CRUD ---
 
-app.get("/api/recipes", async (req, res) => {
-  const files = await recipeFiles();
-  const recipes = await Promise.all(
-    files.map(async (f) => {
-      const recipe = JSON.parse(await fs.readFile(path.join(RECIPES_DIR, f), "utf-8"));
-      return {
-        id: recipe.id,
-        title: recipe.title,
-        servings: recipe.servings,
-        tags: recipe.tags || []
-      };
-    })
-  );
+app.get("/api/recipes", (req, res) => {
+  const recipes = db
+    .prepare("SELECT id, title, servings, tags FROM recipes")
+    .all()
+    .map((row) => ({
+      id: row.id,
+      title: row.title,
+      servings: row.servings,
+      tags: JSON.parse(row.tags)
+    }));
   recipes.sort((a, b) => a.title.localeCompare(b.title));
   res.json(recipes);
 });
 
-app.get("/api/recipes/:id", async (req, res) => {
+app.get("/api/recipes/:id", (req, res) => {
   try {
-    res.json(await readRecipe(req.params.id));
+    res.json(readRecipe(req.params.id));
   } catch {
     res.status(404).json({ error: "Recipe not found" });
   }
 });
 
-app.post("/api/recipes", async (req, res) => {
+app.post("/api/recipes", (req, res) => {
   const { title, servings, tags, ingredients, instructions, notes } = req.body;
   if (!title || !title.trim()) {
     return res.status(400).json({ error: "Title is required" });
   }
   const baseId = slugify(title);
-  const existing = new Set((await recipeFiles()).map((f) => f.replace(/\.json$/, "")));
+  const existing = new Set(listRecipeIds());
   let id = baseId;
   let n = 2;
   while (existing.has(id)) {
@@ -98,14 +174,14 @@ app.post("/api/recipes", async (req, res) => {
     instructions: instructions || "",
     notes: notes || ""
   };
-  await writeRecipe(recipe);
+  writeRecipe(recipe);
   res.status(201).json(recipe);
 });
 
-app.put("/api/recipes/:id", async (req, res) => {
+app.put("/api/recipes/:id", (req, res) => {
   let existing;
   try {
-    existing = await readRecipe(req.params.id);
+    existing = readRecipe(req.params.id);
   } catch {
     return res.status(404).json({ error: "Recipe not found" });
   }
@@ -119,17 +195,16 @@ app.put("/api/recipes/:id", async (req, res) => {
     instructions: instructions !== undefined ? instructions : existing.instructions,
     notes: notes !== undefined ? notes : existing.notes
   };
-  await writeRecipe(recipe);
+  writeRecipe(recipe);
   res.json(recipe);
 });
 
-app.delete("/api/recipes/:id", async (req, res) => {
-  try {
-    await fs.unlink(path.join(RECIPES_DIR, `${req.params.id}.json`));
-    res.status(204).end();
-  } catch {
-    res.status(404).json({ error: "Recipe not found" });
+app.delete("/api/recipes/:id", (req, res) => {
+  const result = db.prepare("DELETE FROM recipes WHERE id = ?").run(req.params.id);
+  if (result.changes === 0) {
+    return res.status(404).json({ error: "Recipe not found" });
   }
+  res.status(204).end();
 });
 
 app.post("/api/recipes/import", async (req, res) => {
@@ -151,14 +226,14 @@ app.post("/api/recipes/import", async (req, res) => {
 
 // --- Grocery list ---
 
-app.post("/api/grocery-list", async (req, res) => {
+app.post("/api/grocery-list", (req, res) => {
   const selections = Array.isArray(req.body.selections) ? req.body.selections : [];
   const grouped = new Map(); // category -> Map(key -> item)
 
   for (const sel of selections) {
     let recipe;
     try {
-      recipe = await readRecipe(sel.id);
+      recipe = readRecipe(sel.id);
     } catch {
       continue;
     }
@@ -222,30 +297,36 @@ app.post("/api/grocery-list", async (req, res) => {
   res.json({ categories });
 });
 
-app.post("/api/ingredients/recategorize", async (req, res) => {
+app.post("/api/ingredients/recategorize", (req, res) => {
   const { name, category } = req.body;
   if (!name || typeof name !== "string" || !name.trim() || !CATEGORIES.includes(category)) {
     return res.status(400).json({ error: "A valid ingredient name and category are required." });
   }
 
   const target = name.trim().toLowerCase();
-  const files = await recipeFiles();
+  const rows = db.prepare("SELECT * FROM recipes").all();
   let updatedRecipes = 0;
 
-  for (const f of files) {
-    const filePath = path.join(RECIPES_DIR, f);
-    const recipe = JSON.parse(await fs.readFile(filePath, "utf-8"));
-    let changed = false;
-    for (const ing of recipe.ingredients) {
-      if (ing.name.trim().toLowerCase() === target && ing.category !== category) {
-        ing.category = category;
-        changed = true;
+  db.exec("BEGIN");
+  try {
+    for (const row of rows) {
+      const recipe = rowToRecipe(row);
+      let changed = false;
+      for (const ing of recipe.ingredients) {
+        if (ing.name.trim().toLowerCase() === target && ing.category !== category) {
+          ing.category = category;
+          changed = true;
+        }
+      }
+      if (changed) {
+        writeRecipe(recipe);
+        updatedRecipes++;
       }
     }
-    if (changed) {
-      await fs.writeFile(filePath, JSON.stringify(recipe, null, 2), "utf-8");
-      updatedRecipes++;
-    }
+    db.exec("COMMIT");
+  } catch (err) {
+    db.exec("ROLLBACK");
+    throw err;
   }
 
   addCategoryKeyword(category, name);

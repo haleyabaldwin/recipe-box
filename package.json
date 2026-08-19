@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "export": "node scripts/export-recipes.js"
   },
   "dependencies": {
     "cheerio": "^1.2.0",

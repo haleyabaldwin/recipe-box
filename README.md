@@ -21,4 +21,4 @@ Leave the terminal window open while you use the app — closing it stops the se
 
 ## Data
 
-Recipes are stored as individual, human-readable JSON files in `data/recipes/`. You can back that folder up, sync it, or edit the files by hand if you want.
+Recipes are stored in a SQLite database at `data/recipes.db` (not tracked in git). The individual JSON files in `data/recipes/` are kept as the original seed data — on first run against an empty database, the server imports them automatically — but the app reads and writes the database from then on, not the JSON files.

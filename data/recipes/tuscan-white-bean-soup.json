@@ -1,0 +1,100 @@
+{
+  "id": "tuscan-white-bean-soup",
+  "title": "Tuscan White Bean Soup",
+  "servings": 6,
+  "tags": [],
+  "ingredients": [
+    {
+      "name": "cannellini beans",
+      "quantity": 3,
+      "unit": "cans",
+      "category": "Canned Goods"
+    },
+    {
+      "name": "yellow onion",
+      "quantity": 1,
+      "unit": "",
+      "category": "Produce"
+    },
+    {
+      "name": "garlic",
+      "quantity": 4,
+      "unit": "cloves",
+      "category": "Produce"
+    },
+    {
+      "name": "olive oil",
+      "quantity": 2,
+      "unit": "Tbsp",
+      "category": "Baking & Cooking"
+    },
+    {
+      "name": "carrots",
+      "quantity": 2,
+      "unit": "large",
+      "category": "Produce"
+    },
+    {
+      "name": "celery",
+      "quantity": 1,
+      "unit": "stalk",
+      "category": "Produce"
+    },
+    {
+      "name": "white wine",
+      "quantity": 0.33,
+      "unit": "cup",
+      "category": "Beverages"
+    },
+    {
+      "name": "chopped kale",
+      "quantity": 2,
+      "unit": "cups",
+      "category": "Produce"
+    },
+    {
+      "name": "vegetable or chicken broth (see notes)",
+      "quantity": 4,
+      "unit": "cups",
+      "category": "Meat"
+    },
+    {
+      "name": "tomato paste",
+      "quantity": 1,
+      "unit": "Tbsp",
+      "category": "Baking & Cooking"
+    },
+    {
+      "name": "red pepper flakes",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "category": "Baking & Cooking"
+    },
+    {
+      "name": "Italian seasoning",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "category": "Baking & Cooking"
+    },
+    {
+      "name": "bay leaves",
+      "quantity": 2,
+      "unit": "",
+      "category": "Baking & Cooking"
+    },
+    {
+      "name": "dried thyme",
+      "quantity": 1,
+      "unit": "tsp",
+      "category": "Baking & Cooking"
+    },
+    {
+      "name": "dried oregano",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "category": "Baking & Cooking"
+    }
+  ],
+  "instructions": "1. Saute the finely chopped onion in a large pot or dutch oven with the oil.\n2. Once it starts to brown slightly, add in the garlic, celery and carrot. Saute an additional 10 or so minutes to let the veggies soften and brown slightly. The browning helps add lots of flavor!\n3. Add in the white wine and saute until most of the liquid has evaporated, about 5 minutes.\n4. Add in all remaining ingredients except for the kale (see notes about the amount of broth since there is a range, but I recommend starting with 2 1/2 cups), and stir well.\n5. Bring to a boil, then cover and reduce heat to low. Let simmer for 15 minutes.\n6. Discard the bay leaves, then transfer about 2 1/2 - 3 cups worth of the soup to a blender. Blend until smooth.\n7. Transfer back to the pot and stir well to combine. If it&#039;s too thick,  add in more broth until it reaches your desired consistency.\n8. Add in the chopped kale and let simmer for a few minutes to allow the kale to wilt. Taste and adjust flavors as desired. I usually add a bit more salt and pepper and a squeeze of lemon juice.\n9. Serve warm as is or with a hearty bread on the side. Enjoy!",
+  "notes": "Imported from https://eatwithclarity.com/white-bean-soup/#wprm-recipe-container-19546"
+}

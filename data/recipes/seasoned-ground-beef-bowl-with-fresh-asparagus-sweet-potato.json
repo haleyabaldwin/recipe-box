@@ -23,6 +23,12 @@
       "quantity": 2,
       "unit": "",
       "category": "Produce"
+    },
+    {
+      "name": "olive oil",
+      "quantity": 2,
+      "unit": "tbsp",
+      "category": "Baking & Cooking"
     }
   ],
   "instructions": "",
